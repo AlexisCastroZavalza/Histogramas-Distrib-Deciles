@@ -1,0 +1,34 @@
+library(ggplot2)
+library(foreign)
+library(readstata13)
+library(dplyr)
+library(tidyr)
+library(lubridate)
+#Importar datos para el análisis
+dta <- read.dta13("datos1.dta")
+View(dta)
+#Análisis Gráfico
+ggplot(dta, aes(PML, fill = Hora)) + geom_histogram(binwidth = 200)
+ggplot(dta, aes(PML, fill = Hora)) + geom_histogram(binwidth = 500)
+ggplot(dta, aes(PML, fill = Hora)) + geom_histogram(bins = 500)
+hist <-ggplot(dta, aes(PML, fill = Hora)) + geom_histogram(bins = 500)
+hist <- hist + geom_vline(xintercept = 541)
+hist <- hist + geom_vline(xintercept = 1257)
+hist
+ggplot(dta, aes(PML, fill = Hora)) + geom_histogram(binwidth = 500, position = "fill")
+hist + theme(legend.justification=c(1,0), legend.position=c(1,0))
+hist + theme(legend.justification=c(1,1), legend.position=c(1,1))
+hist <- hist + theme(legend.justification=c(1,1), legend.position=c(1,1))
+hist + theme_light()
+hist + theme_light() + theme(legend.justification=c(1,1), legend.position=c(1,1))
+hist <- hist + theme_light() + theme(legend.justification=c(1,1), legend.position=c(1,1))
+hist2 <-ggplot(dta, aes(PML, fill = Hora)) + geom_histogram(binwidth = 500, position = "fill")
+hist2
+p <- ggplot(dta, aes(Hora, PML)) + geom_violin()
+p
+#Agrupar por horas/Meses
+a<-group_by(dta,Hora)
+pf<-summarise(a, maximo = max(PML), prom_Fecha=mean(PML, na.rm = TRUE), minimo = min(PML))
+#Desarrollar los deciles
+quantile(dta$PML, prob = seq(0, 1, length = 11), type = 5)
+#Repetir el proceso particionando la base de datos para el decil 1 y el 10
